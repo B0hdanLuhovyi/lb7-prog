@@ -1,7 +1,7 @@
 import unittest
 import threading
 import time
-from test import Patient, Doctor, Diagnosis, Prescription, Appointment, make_appointment  # Замініть your_module на назву вашого файлу
+from test import Patient, Doctor, Diagnosis, Prescription, Appointment, make_appointment
 
 class TestMedicalAppointments(unittest.TestCase):
 
