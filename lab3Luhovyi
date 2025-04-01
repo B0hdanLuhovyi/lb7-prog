@@ -1,0 +1,106 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class MedicalApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Щось зхоже на реєстратуру лікарні :)")
+        self.appointments = [] #Список, де зберігаються записи на прийом до лкарів
+        self.treatments = []#Створили список, у якому буде зберігатися призначення лікаря
+        self.create_menu()
+        self.create_main_interface()
+
+    def create_menu(self): #Створює меню
+        menu_bar = tk.Menu(self.root)
+        self.root.config(menu=menu_bar)
+        
+        main_menu = tk.Menu(menu_bar, tearoff=0)
+        main_menu.add_command(label="Головна", command=self.create_main_interface)
+        main_menu.add_command(label="Запис на прийом", command=self.create_patient_interface)
+        main_menu.add_command(label="Призначення лікаря", command=self.create_doctor_interface)
+        main_menu.add_command(label="Перегляд записів", command=self.view_appointments)
+        main_menu.add_command(label="Перегляд призначень", command=self.view_treatments)
+        menu_bar.add_cascade(label="Меню", menu=main_menu)
+
+    def create_main_interface(self): # це створює саме вікно програми
+        for widget in self.root.winfo_children():
+            if isinstance(widget, tk.Frame):
+                widget.destroy()
+        
+        frame = tk.Frame(self.root)
+        frame.pack(pady=20)
+        
+        tk.Label(frame, text="Це головна сторінка, тут нічого немає, щоб перейти далі, натисніть меню і оберіть що Вам потрібно", font=("Arial", 16)).pack()
+
+    def create_patient_interface(self): # створення інтерфейсу, де пацієнт зможе призначитися на прийом
+        for widget in self.root.winfo_children():
+            if isinstance(widget, tk.Frame):
+                widget.destroy()
+        
+        frame = tk.Frame(self.root)
+        frame.pack(pady=20)
+        
+        tk.Label(frame, text="Запис на прийом", font=("Arial", 14)).pack()
+        tk.Label(frame, text="Ім'я:").pack()
+        name_entry = tk.Entry(frame)
+        name_entry.pack()
+        
+        tk.Label(frame, text="Вік, а саме скільки повних років:").pack()
+        age_entry = tk.Entry(frame)
+        age_entry.pack()
+        
+        tk.Label(frame, text="Оберіть лікаря:").pack()
+        doctor_menu = tk.StringVar()
+        doctor_menu.set("Лікар Дьякова")
+        doctors = ["Лікар Дьякова Анна", "Лікар Храмцова Дарья", "Лікар Демиденко Єлизавета"]
+        tk.OptionMenu(frame, doctor_menu, *doctors).pack()
+        
+        tk.Button(frame, text="Записатися", command=lambda: self.book_appointment(name_entry.get(), age_entry.get(), doctor_menu.get())).pack()
+
+    def create_doctor_interface(self): # а за допомогою цього інтерфейсу лікарі зможуть дати діагноз та що треба пити
+        for widget in self.root.winfo_children():
+            if isinstance(widget, tk.Frame):
+                widget.destroy()
+        
+        frame = tk.Frame(self.root)
+        frame.pack(pady=20)
+        
+        tk.Label(frame, text="Призначення лікаря", font=("Arial", 14)).pack()
+        tk.Label(frame, text="Ім'я пацієнта:").pack()
+        patient_entry = tk.Entry(frame)
+        patient_entry.pack()
+        
+        tk.Label(frame, text="Діагноз:").pack()
+        diagnosis_entry = tk.Entry(frame)
+        diagnosis_entry.pack()
+        
+        tk.Label(frame, text="Призначення ліків:").pack()
+        prescription_entry = tk.Entry(frame)
+        prescription_entry.pack()
+        
+        tk.Button(frame, text="Призначити", command=lambda: self.assign_treatment(patient_entry.get(), diagnosis_entry.get(), prescription_entry.get())).pack()
+    
+    def book_appointment(self, name, age, doctor): #функціонал запису на прийом до лікаря
+        if name and age:
+            self.appointments.append(f"Пацієнт {name}, {age} років записаний до {doctor}")
+            messagebox.showinfo("Запис", f"Пацієнт {name}, {age} років записаний до {doctor}")
+        else:
+            messagebox.showwarning("Помилка", "Будь ласка, заповніть всі поля")
+    
+    def assign_treatment(self, patient, diagnosis, prescription): #функціонал призначення діагнозу
+        if patient and diagnosis and prescription:
+            self.treatments.append(f"Пацієнту {patient} встановлено діагноз: {diagnosis}, призначено: {prescription}")
+            messagebox.showinfo("Призначення", f"Пацієнту {patient} встановлено діагноз: {diagnosis}, призначено: {prescription}")
+        else:
+            messagebox.showwarning("Помилка", "Будь ласка, заповніть всі поля")
+    
+    def view_appointments(self): #gthtukzl pfgbcsd yf ghbqjv
+        messagebox.showinfo("Записи на прийом", "\n".join(self.appointments) if self.appointments else "Немає записів")
+    
+    def view_treatments(self): #gthtukzl ghbpyfxtym ksrfhsd
+        messagebox.showinfo("Призначення", "\n".join(self.treatments) if self.treatments else "Немає призначень")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MedicalApp(root)
+    root.mainloop()
